@@ -222,6 +222,7 @@ describe('MaxHeap', () => {
 			h.push(15, 14);
 			h.push(0, 16);
 			h.push(100, 100);
+
 			expect(h.pop()).to.equal(100);
 			expect(h.pop()).to.equal(0);
 			expect(h.pop()).to.equal(42);

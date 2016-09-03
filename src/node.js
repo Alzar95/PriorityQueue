@@ -21,10 +21,6 @@ class Node {
 	}
 
 	removeChild(node) {
-		if (node === null)
-		{
-			return;
-		}
 		if (this.left === node) {
 			this.left = null;
 			node.parent = null;
@@ -40,7 +36,7 @@ class Node {
 
 	remove() {
 		if (this.parent === null) {
-			return null;
+			return;
 		}
 		else {
 			this.parent.removeChild(this);
@@ -49,7 +45,7 @@ class Node {
 
 	swapWithParent() {
 		if (this.parent === null) {
-			return null;
+			return;
 		}
 		else {
 			var currentParent = this.parent;

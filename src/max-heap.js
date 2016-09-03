@@ -13,8 +13,8 @@ class MaxHeap {
 	}
 
 	pop() {
-		if (this.root === null) {
-			return null;
+		if (this.root === null ) {
+			return;
 		}
 		else {
 			var dRoot = this.detachRoot();
@@ -27,9 +27,17 @@ class MaxHeap {
 	detachRoot() {
 		var currentRoot = this.root;
 
+		if (this.root.left !== null) {
+			this.root.left.parent = null;
+		}
+
+		if (this.root.right !== null) {
+			this.root.right.parent = null;
+		}
+
 		this.root = null;
 
-		if (this.parentNodes[this.parentNodes.length - 2] === currentRoot) {
+		if (this.parentNodes.indexOf(currentRoot) >= 0) {
 			this.parentNodes.shift();
 		}
 
@@ -37,25 +45,41 @@ class MaxHeap {
 	}
 
 	restoreRootFromLastInsertedNode(detached) {
-		if (!detached.data) {
-			return null;
+		if (detached.priority) {
+			var last = this.parentNodes[this.parentNodes.length - 1];
+
+			this.root = last;
+
+			if (last === detached.left) {
+				last.remove();
+				last.left = null;
+				last.right = null;
+				last.parent = null;
+			}
+			else if (last === detached.right) {
+				last.remove();
+				last.right = null;
+				last.parent = null;
+				last.left = detached.left;
+				last.left.parent = last;
+				this.parentNodes.unshift(last);
+				this.parentNodes.pop();
+			}
+			else if (detached.left === null || detached.right === null) {
+				this.root = null;
+				return;
+			}
+			else {
+				last.remove();
+				last.left = detached.left;
+				last.right = detached.right;
+				last.left.parent = last;
+				last.right.parent = last;
+				if (this.parentNodes.indexOf(last.parent) === -1)
+					this.parentNodes.unshift(last.parent);
+				this.parentNodes.pop();
+			}
 		}
-
-		var last = this.parentNodes.pop();
-
-		this.root = last;
-
-		if (last === detached.left) {
-			last.left = null;
-			last.right = null;
-		}
-		else if (last === detached.right) {
-			last.right = null;
-			last.left = detached.left;
-			last.left.parent = last;
-		}
-
-		this.parentNodes.unshift(last);
 	}
 
 	size() {
@@ -123,7 +147,7 @@ class MaxHeap {
 	}
 
 	shiftNodeDown(node) {
-		if (node.left === null && node.right === null) {
+		if (node === null || (node.left === null && node.right === null)) {
 			return;
 		}
 
